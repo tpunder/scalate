@@ -66,4 +66,37 @@ class WhitespaceTest extends TemplateTestSupport {
 """)
   }
 
+  test("ssp <% if(...) { %>...<% } %> mid-line expression whitespace") {
+    assertSspOutput("""
+  <tr class="featured">
+""", """
+<% val featured = true %>
+  <tr<% if(featured) { %> class="featured"<% } %>>
+""")
+  }
+
+  test("ssp <% ... %> expression end-of-line whitespace (without +)") {
+    assertSspOutput("""
+  LINE 1
+  featured  LINE 2
+""", """
+  LINE 1
+<% val featured = true %>
+  <% if(featured) { %>featured<% } %>
+  LINE 2
+""")
+  }
+
+  test("ssp <% ... %> expression end-of-line whitespace (with +)") {
+    assertSspOutput("""
+  LINE 1
+  featured
+  LINE 2
+""", """
+  LINE 1
+<% val featured = true %>
+  <% if(featured) { %>featured<% } +%>
+  LINE 2
+""")
+  }
 }
